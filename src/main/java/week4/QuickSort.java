@@ -29,9 +29,9 @@ public class QuickSort {
         a[l] = a[k];
         a[k] = t;
 
-        int[] mS = partition3(a, l, r);
-        int m1 = mS[0];
-        int m2 = mS[1];
+        int[] m = partition3(a, l, r);
+        int m1 = m[0];
+        int m2 = m[1];
 
         randomizedQuickSort3Partition(a, l, m1 - 1);
         randomizedQuickSort3Partition(a, m2 + 1, r);
@@ -40,8 +40,6 @@ public class QuickSort {
     private static int[] partition3(long[] a, int l, int r) {
         long x = a[l];
         int m1 = l;
-        int m2 = l;
-        int rep = 0;
 
         for (int i = l + 1; i <= r; i++) {
             if (a[i] < x) {
@@ -50,20 +48,17 @@ public class QuickSort {
             }
         }
 
+        int m2 = m1;
 
-        for (int i = l + 1; i <= r; i++) {
+        for (int i = m1 + 1; i <= r; i++) {
             if (a[i] == x) {
-                rep++;
-                m2 = m1 + rep;
+                m2++;
                 swap(a, m2, i);
             }
         }
 
         swap(a, l, m1);
 
-        if (rep == 0) {
-            m2 = m1;
-        }
         return new int[]{m1, m2};
     }
 
