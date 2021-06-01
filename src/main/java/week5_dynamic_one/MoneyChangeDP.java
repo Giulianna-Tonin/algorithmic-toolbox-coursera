@@ -25,7 +25,6 @@ public class MoneyChangeDP {
     public static void main(String[] args) {
 
         int money = 34;
-        int money2 = 2;
         int money3 = 9;
         int money4 = 1000;
 
