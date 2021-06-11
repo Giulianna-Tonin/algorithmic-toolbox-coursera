@@ -22,23 +22,26 @@ public class MaximumValueOfAnArithmeticExpression {
         }
 
 
+        int pivo = 1;
 
 
         for(int s = 1; s < onlyNumbers.size() - 1; s++){
-            int chrasPivo = 1;
+            int pivoInt = pivo;
             for(int i = 1; i <= onlyNumbers.size() - s; i++) {
                 int j = i + s;
-                char opk = chars[chrasPivo];
+
+                char opk = chars[pivoInt];
 
                 long[] minAndMax = MinAndMax(i, j, M, m, opk);
                 m[i][j] = minAndMax[0];
                 M[i][j] = minAndMax[1];
 
-                chrasPivo+=2;
+                pivoInt+=2;
 
             }
-
+            pivo+=2;
         }
+
 
         return M[1][onlyNumbers.size()];
     }
@@ -59,12 +62,6 @@ public class MaximumValueOfAnArithmeticExpression {
             Long mik = m[i][k];
             Long mk1j = m[k+1][j];
 
-            char[] chars = MK1j.toString().toCharArray();
-            char sinal = chars[0];
-
-            if(sinal != 0){
-                opk = sinal;
-            }
 
             long a = eval(Mik, MK1j, opk);
             long b = eval(Mik, mk1j, opk);
@@ -122,7 +119,8 @@ public class MaximumValueOfAnArithmeticExpression {
 
     public static void main(String[] args) {
 
-        String exp = "5-8+7*4-8+9";
+//        String exp = "5-8+7*4-8+9";
+        String exp = "1+5*6-3";
 
         getMaximValue(exp);
     }
