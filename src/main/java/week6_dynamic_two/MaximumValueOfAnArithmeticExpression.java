@@ -4,13 +4,12 @@ import java.util.*;
 
 public class MaximumValueOfAnArithmeticExpression {
 
-//    Integer itemWeight = (Integer) itemsWeightsAndValues.keySet().toArray()[i];
-//    Integer itemValue = itemsWeightsAndValues.get(itemWeight);
 
     private static long getMaximValue(String exp) {
 
         char[] chars = exp.toCharArray();
         List<Long> onlyNumbers = getNumbers(chars);
+
         long[][] M = new long[onlyNumbers.size()+1][onlyNumbers.size()+1];
         long[][] m = new long[onlyNumbers.size()+1][onlyNumbers.size()+1];
 
@@ -22,25 +21,20 @@ public class MaximumValueOfAnArithmeticExpression {
         }
 
 
-        int pivo = 1;
 
 
-        for(int s = 1; s < onlyNumbers.size() - 1; s++){
-            int pivoInt = pivo;
+        for(int s = 1; s < onlyNumbers.size(); s++){
+            List<Character> signals = getSignal(chars);
             for(int i = 1; i <= onlyNumbers.size() - s; i++) {
                 int j = i + s;
 
-                char opk1 = chars[pivoInt];
-                char opk2 = chars[pivo];
-
-                long[] minAndMax = MinAndMax(i, j, M, m, opk1, opk2);
+                long[] minAndMax = MinAndMax(i, j, M, m, signals);
                 m[i][j] = minAndMax[0];
                 M[i][j] = minAndMax[1];
 
-                pivoInt+=2;
+                signals.remove(0);
 
             }
-            pivo+=2;
         }
 
 
@@ -49,12 +43,14 @@ public class MaximumValueOfAnArithmeticExpression {
 
 
 
-    private static long[] MinAndMax(int i, int j, long[][] M, long[][] m, char opk1, char opk2) {
+    private static long[] MinAndMax(int i, int j, long[][] M, long[][] m, List<Character> signals) {
         long [] minAndMax = new long[2];
-        long min = 0;
-        long max = 0;
+        long min = +1000000000000000000L;
+        long max = -1000000000000000000L;
+        int pivo = 0;
 
         for (int k = i; k <= (j-1); k++){
+            char opk = signals.get(pivo);
 
 
             Long Mik = M[i][k];
@@ -64,15 +60,16 @@ public class MaximumValueOfAnArithmeticExpression {
             Long mk1j = m[k+1][j];
 
 
-            long a = eval(Mik, MK1j, opk1);
-            long b = eval(Mik, mk1j, opk1);
-            long c = eval(mik, MK1j, opk2);
-            long d = eval(mik, mk1j, opk2);
+            long a = eval(Mik, MK1j, opk);
+            long b = eval(Mik, mk1j, opk);
+            long c = eval(mik, MK1j, opk);
+            long d = eval(mik, mk1j, opk);
             List<Long> valsMin = getList(min, a, b, c, d);
             List<Long> valsMax = getList(max, a, b, c, d);
 
             min = Collections.min(valsMin);
             max = Collections.max(valsMax);
+            pivo++;
         }
         minAndMax[0] = min;
         minAndMax[1] = max;
@@ -84,6 +81,7 @@ public class MaximumValueOfAnArithmeticExpression {
 
     private static List<Long> getList(long min, Long a, Long b, Long c, Long d) {
         List<Long> list = new ArrayList<>();
+        list.add(min);
         list.add(a);
         list.add(b);
         list.add(c);
@@ -99,6 +97,29 @@ public class MaximumValueOfAnArithmeticExpression {
             }
         }
         return onlyNumbers;
+    }
+
+    private static List<Character> getSignal(char[] chars) {
+        List<Character> onlyChars = new ArrayList<>();
+        for (char c : chars) {
+            if (isOp(c)) {
+                onlyChars.add(c);
+            }
+        }
+        return onlyChars;
+    }
+
+    private static List<Object> getAll(char[] chars) {
+        List<Object> all = new ArrayList<>();
+        all.add(0,0);
+        for (char c : chars) {
+            if (isOp(c)) {
+                all.add(c);
+            } else {
+                all.add(Long.parseLong(String.valueOf(c)));
+            }
+        }
+        return all;
     }
 
     private static long eval(long a, long b, char op) {
@@ -120,10 +141,10 @@ public class MaximumValueOfAnArithmeticExpression {
 
     public static void main(String[] args) {
 
-//        String exp = "5-8+7*4-8+9";
-        String exp = "1+5*6-3";
+        String exp = "5-8+7*4-8+9";
+//        String exp = "1+5*6-3";
 
-        getMaximValue(exp);
+        System.out.println(getMaximValue(exp));
     }
 
 
