@@ -20,27 +20,24 @@ public class MaximumValueOfAnArithmeticExpression {
             M[i][i] = onlyNumbers.get(i - 1);
         }
 
-
         for (int s = 1; s < n; s++) {
             List<Character> signals = getSignal(chars);
             for (int i = 1; i <= n - s; i++) {
                 int j = i + s;
 
-                long[] minAndMax = minAndMax(i, j, M, m, signals);
-                m[i][j] = minAndMax[0];
-                M[i][j] = minAndMax[1];
+                m[i][j] = minAndMax(i, j, M, m, signals)[0];
+                M[i][j] = minAndMax(i, j, M, m, signals)[1];
 
                 signals.remove(0);
             }
         }
 
-
         return M[1][n];
     }
 
 
-    private static long[] minAndMax(int i, int j, Long[][] M, Long[][] m, List<Character> signals) {
-        long[] minAndMax = new long[2];
+    private static Long[] minAndMax(int i, int j, Long[][] M, Long[][] m, List<Character> signals) {
+        Long[] minAndMax = new Long[2];
         long min = +1000000000000000000L;
         long max = -1000000000000000000L;
         int pivo = 0;
@@ -48,23 +45,13 @@ public class MaximumValueOfAnArithmeticExpression {
         for (int k = i; k <= (j - 1); k++) {
             char opk = signals.get(pivo);
 
+            long a = eval(M[i][k], M[k + 1][j], opk);
+            long b = eval(M[i][k], m[k + 1][j], opk);
+            long c = eval(m[i][k], M[k + 1][j], opk);
+            long d = eval(m[i][k], m[k + 1][j], opk);
 
-            Long Mik = M[i][k];
-            Long MK1j = M[k + 1][j];
-
-            Long mik = m[i][k];
-            Long mk1j = m[k + 1][j];
-
-
-            long a = eval(Mik, MK1j, opk);
-            long b = eval(Mik, mk1j, opk);
-            long c = eval(mik, MK1j, opk);
-            long d = eval(mik, mk1j, opk);
-            List<Long> valsMin = getList(min, a, b, c, d);
-            List<Long> valsMax = getList(max, a, b, c, d);
-
-            min = Collections.min(valsMin);
-            max = Collections.max(valsMax);
+            min = Collections.min(getList(min, a, b, c, d));
+            max = Collections.max(getList(max, a, b, c, d));
             pivo++;
         }
         minAndMax[0] = min;
