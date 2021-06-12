@@ -9,55 +9,51 @@ public class MaximumValueOfAnArithmeticExpression {
 
         char[] chars = exp.toCharArray();
         List<Long> onlyNumbers = getNumbers(chars);
+        int n = onlyNumbers.size();
 
-        long[][] M = new long[onlyNumbers.size()+1][onlyNumbers.size()+1];
-        long[][] m = new long[onlyNumbers.size()+1][onlyNumbers.size()+1];
+        Long[][] M = new Long[n + 1][n + 1];
+        Long[][] m = new Long[n + 1][n + 1];
 
-        //prencher as diagonais
-        for(int i = 1; i <= onlyNumbers.size(); i++ ){
-
-                m[i][i] = onlyNumbers.get(i-1);
-                M[i][i] = onlyNumbers.get(i-1);
+        //diagonal principal
+        for (int i = 1; i <= n; i++) {
+            m[i][i] = onlyNumbers.get(i - 1);
+            M[i][i] = onlyNumbers.get(i - 1);
         }
 
 
-
-
-        for(int s = 1; s < onlyNumbers.size(); s++){
+        for (int s = 1; s < n; s++) {
             List<Character> signals = getSignal(chars);
-            for(int i = 1; i <= onlyNumbers.size() - s; i++) {
+            for (int i = 1; i <= n - s; i++) {
                 int j = i + s;
 
-                long[] minAndMax = MinAndMax(i, j, M, m, signals);
+                long[] minAndMax = minAndMax(i, j, M, m, signals);
                 m[i][j] = minAndMax[0];
                 M[i][j] = minAndMax[1];
 
                 signals.remove(0);
-
             }
         }
 
 
-        return M[1][onlyNumbers.size()];
+        return M[1][n];
     }
 
 
-
-    private static long[] MinAndMax(int i, int j, long[][] M, long[][] m, List<Character> signals) {
-        long [] minAndMax = new long[2];
+    private static long[] minAndMax(int i, int j, Long[][] M, Long[][] m, List<Character> signals) {
+        long[] minAndMax = new long[2];
         long min = +1000000000000000000L;
         long max = -1000000000000000000L;
         int pivo = 0;
 
-        for (int k = i; k <= (j-1); k++){
+        for (int k = i; k <= (j - 1); k++) {
             char opk = signals.get(pivo);
 
 
             Long Mik = M[i][k];
-            Long MK1j = M[k+1][j];
+            Long MK1j = M[k + 1][j];
 
             Long mik = m[i][k];
-            Long mk1j = m[k+1][j];
+            Long mk1j = m[k + 1][j];
 
 
             long a = eval(Mik, MK1j, opk);
@@ -76,7 +72,6 @@ public class MaximumValueOfAnArithmeticExpression {
 
         return minAndMax;
     }
-
 
 
     private static List<Long> getList(long min, Long a, Long b, Long c, Long d) {
@@ -109,18 +104,6 @@ public class MaximumValueOfAnArithmeticExpression {
         return onlyChars;
     }
 
-    private static List<Object> getAll(char[] chars) {
-        List<Object> all = new ArrayList<>();
-        all.add(0,0);
-        for (char c : chars) {
-            if (isOp(c)) {
-                all.add(c);
-            } else {
-                all.add(Long.parseLong(String.valueOf(c)));
-            }
-        }
-        return all;
-    }
 
     private static long eval(long a, long b, char op) {
         if (op == '+') {
@@ -135,16 +118,33 @@ public class MaximumValueOfAnArithmeticExpression {
         }
     }
 
-    private static boolean isOp (char c) {
+    private static boolean isOp(char c) {
         return c == '+' || c == '-' || c == '*';
     }
 
     public static void main(String[] args) {
 
-        String exp = "5-8+7*4-8+9";
-//        String exp = "1+5*6-3";
+        System.out.println(check(getMaximValue("5-8+7*4-8+9"), 200L));
+        System.out.println(check(getMaximValue("1+5"), 6L));
+        System.out.println(check(getMaximValue("0"), 0L));
+        System.out.println(check(getMaximValue("0+0"), 0L));
+        System.out.println(check(getMaximValue("9"), 9L));
+        System.out.println(check(getMaximValue("9*9"), 81L));
+        System.out.println(check(getMaximValue("1+5*6-3"), 33L));
+        System.out.println(check(getMaximValue("9*5*6-3"), 267L));
+        System.out.println(check(getMaximValue("1+1+1+1+1+1+1+1+1+1+1+1+1+1"), 14L));
+        System.out.println(check(getMaximValue("9*9*9*9*9*9*9*9*9*9*9*9*9*9"), 22876792454961L));
+        System.out.println(check(getMaximValue("9*9*9*9*9*9*9*9*9*9*9*9*9*9*9"), 205891132094649L));
+        System.out.println(check(getMaximValue("6*3-2-5+5+0+0+8-6*8+0-4-2+3+2"), 1650L));
+        System.out.println(check(getMaximValue("6*3-2-5+5+0+0+8-6*8+0-4-2+3+2"), 1650L));
+        System.out.println(check(getMaximValue("1+0+3*5+7-3*6*4-0-7+8-4*4*1*6"), 149040L));
+        System.out.println(check(getMaximValue("0*8*3+3-7*2*1+6*3*8*0-8+1-2*7"), 181125L));
 
-        System.out.println(getMaximValue(exp));
+
+    }
+
+    private static boolean check(Long myAnswuer, Long answer) {
+        return myAnswuer.equals(answer);
     }
 
 
