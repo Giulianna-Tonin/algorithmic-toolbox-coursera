@@ -30,9 +30,10 @@ public class MaximumValueOfAnArithmeticExpression {
             for(int i = 1; i <= onlyNumbers.size() - s; i++) {
                 int j = i + s;
 
-                char opk = chars[pivoInt];
+                char opk1 = chars[pivoInt];
+                char opk2 = chars[pivo];
 
-                long[] minAndMax = MinAndMax(i, j, M, m, opk);
+                long[] minAndMax = MinAndMax(i, j, M, m, opk1, opk2);
                 m[i][j] = minAndMax[0];
                 M[i][j] = minAndMax[1];
 
@@ -48,7 +49,7 @@ public class MaximumValueOfAnArithmeticExpression {
 
 
 
-    private static long[] MinAndMax(int i, int j, long[][] M, long[][] m, char opk) {
+    private static long[] MinAndMax(int i, int j, long[][] M, long[][] m, char opk1, char opk2) {
         long [] minAndMax = new long[2];
         long min = 0;
         long max = 0;
@@ -63,10 +64,10 @@ public class MaximumValueOfAnArithmeticExpression {
             Long mk1j = m[k+1][j];
 
 
-            long a = eval(Mik, MK1j, opk);
-            long b = eval(Mik, mk1j, opk);
-            long c = eval(mik, MK1j, opk);
-            long d = eval(mik, mk1j, opk);
+            long a = eval(Mik, MK1j, opk1);
+            long b = eval(Mik, mk1j, opk1);
+            long c = eval(mik, MK1j, opk2);
+            long d = eval(mik, mk1j, opk2);
             List<Long> valsMin = getList(min, a, b, c, d);
             List<Long> valsMax = getList(max, a, b, c, d);
 
